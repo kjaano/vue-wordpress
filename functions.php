@@ -37,10 +37,10 @@ function vue_wordpress_scripts()
     // Scripts
 
     // Enable For Production - Disable for Development
-    wp_enqueue_script('vue_wordpress.js', get_template_directory_uri() . '/dist/vue-wordpress.js', array(), null, true);
+//    wp_enqueue_script('vue_wordpress.js', get_template_directory_uri() . '/dist/vue-wordpress.js', array(), null, true);
 
     // Enable For Development - Remove for Production
-    // wp_enqueue_script( 'vue_wordpress.js', 'http://localhost:8080/vue-wordpress.js', array(), false, true );
+     wp_enqueue_script( 'vue_wordpress.js', 'http://localhost:8080/vue-wordpress.js', array(), false, true );
 }
 
 add_action( 'wp_enqueue_scripts', 'vue_wordpress_scripts' );
@@ -168,3 +168,27 @@ function vue_wordpress_min_read( $content )
    
     return $time . 'min read';
 }
+
+
+/* KAIRI */
+/* ACF endpoint */
+function  markers_endpoint( $request_data ) {
+    $args = array(
+        'post_type' => 'post',
+        'posts_per_page'=>-1, 
+        'numberposts'=>-1
+    );
+    
+    $posts = get_posts($args);
+    foreach ($posts as $key => $post) {
+        $posts[$key]->acf = get_fields($post->ID);
+    }
+    return  $posts;
+}
+    
+add_action( 'rest_api_init', function () {
+    register_rest_route( 'markers/v1', '/post/', array(
+        'methods' => 'GET',
+        'callback' => 'markers_endpoint'
+    ));
+});
