@@ -171,7 +171,8 @@ function vue_wordpress_min_read( $content )
 
 
 /* KAIRI */
-/* ACF endpoint */
+/* ACF endpoint (make plugin) */
+/* Needed to get acf working! */
 function  markers_endpoint( $request_data ) {
     $args = array(
         'post_type' => 'post',
@@ -185,7 +186,9 @@ function  markers_endpoint( $request_data ) {
     }
     return  $posts;
 }
-    
+// The add_action method creates the custom endpoint and registering it through the rest_api_init hook.
+// Now that the mapping works appropriately, feel free to hit your new REST endpoint at: /wordpress/wp-json/markers/v1/post.
+// notice the new ACF field (if it is created ):
 add_action( 'rest_api_init', function () {
     register_rest_route( 'markers/v1', '/post/', array(
         'methods' => 'GET',
